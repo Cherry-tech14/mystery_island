@@ -1,24 +1,22 @@
-from game import locations
+from game import locations, new_game, move_player
 
 print("=== MYSTERY ISLAND ===")
 print("The Lost Lighthouse\n")
 
 name = input("Enter your name: ")
+player = new_game(name)
+
+
 print(f"\nWelcome to Mystery Island, {name}")
 print("You wake up on a beach after a terrible storm")
 print("Your mission is to restore the lighthouse beacon\n")
 
-location = "Beach"
-print(f"Current Location: {location}")
-
-energy = 5
-print(f"Energy: {energy}")
-
-inventory = []
-print(f"Inventory: {inventory}\n")
+print(f"Current Location: {player['location']}")
+print(f"Energy: {player['energy']}")
+print(f"Inventory: {player['inventory']}\n")
 
 while True:
-    print("1. Move")
+    print("\n1. Move")
     print("2. Explore")
     print("3. Check Inventory")
     print("4. Quit\n")
@@ -26,31 +24,26 @@ while True:
     choices = input("Select an option: ").strip()
 
     if choices == "1":
+        location = player["location"]
+
         print(f"Available locations: {locations[location]}")
+
         destination = input("Where do you want to go? ").strip().title()
+        message = move_player(player, destination)
 
-        if destination not in locations[location]:
-            print("Invalid destination")
+        print(message)
+        print(f"Remaining energy: {player['energy']}")
 
-        elif destination == "Old Bridge" and "rope" not in inventory:
-            print("You cannot cross the bridge without a rope")
-
-        else:
-            location = destination
-            energy -= 1
-            print(f"You moved to {location}")
-            print(f"Remaining energy: {energy}")
-
-        if energy == 0:
-            print("Game Over! You ran out of energy.")
+        if player["game_over"]:
             break
 
-        
-
-    
     elif choices == "2":
+        location = player["location"]
+        inventory = player["inventory"]
+
         if location == "Jungle":
             print("You found a rope")
+
             if "rope" not in inventory:
                 inventory.append("rope")
                 print("You collected a rope")
@@ -69,17 +62,24 @@ while True:
                 print("You already collected the lantern")
 
         elif location == "Lighthouse":
-            if "lantern" in inventory and energy > 0:
+            if "lantern" in inventory and player["energy"] > 0:
+                player["won"] = True
+                player["game_over"] = True
+
                 print("Congratulations! You restored the lighthouse beacon!")
                 break
+
             else:
                 print("You need a lantern to light the beacon.")
 
+        else:
+            print("Nothing useful to explore here.")
 
     elif choices == "3":
-        print(f"Inventory: {inventory}")
+        print(f"Inventory: {player['inventory']}")
 
     elif choices == "4":
+        player["game_over"] = True
         print("Goodbye, Thanks for playing")
         break
 
