@@ -37,3 +37,39 @@ def move_player(player, destination):
             player["game_over"] = True
             return "Game Over, You ran out of energy"
         return "Movement was successful"
+
+def explore(player):
+    if player["game_over"]:
+        return "The game is already over"
+    
+    location = player["location"]
+    inventory = player["inventory"]
+
+    if location == "Jungle":
+        if "rope" not in inventory:
+            inventory.append("rope")
+            return "You collected a rope"
+        else:
+            return "You already collected the rope"
+
+    elif location == "Cave":
+        if "lantern" not in inventory:
+            inventory.append("lantern")
+            return "You collected a lantern"
+        else:
+            return "You already collected the lantern"
+
+    elif location == "Lighthouse":
+        if "lantern" in inventory and player["energy"] > 0:
+            player["won"] = True
+            player["game_over"] = True
+
+            return "Congratulations, You restored the lighthouse beacon"
+
+        else:
+            return "You need a lantern to light the beacon"
+
+    else:
+        return "Nothing useful to explore here"
+        
+    
