@@ -29,13 +29,25 @@ while True:
         print(f"Available locations: {locations[location]}")
         destination = input("Where do you want to go? ").strip().title()
 
-        if destination in locations[location]:
-            location = destination
-            print(f"You moved to {location}")
+        if destination not in locations[location]:
+            print("Invalid destination")
+
+        elif destination == "Old Bridge" and "rope" not in inventory:
+            print("You cannot cross the bridge without a rope")
 
         else:
-            print("Invalid destination, You cannot move there")
+            location = destination
+            energy -= 1
+            print(f"You moved to {location}")
+            print(f"Remaining energy: {energy}")
 
+        if energy == 0:
+            print("Game Over! You ran out of energy.")
+            break
+
+        
+
+    
     elif choices == "2":
         if location == "Jungle":
             print("You found a rope")
@@ -55,6 +67,13 @@ while True:
 
             else:
                 print("You already collected the lantern")
+
+        elif location == "Lighthouse":
+            if "lantern" in inventory and energy > 0:
+                print("Congratulations! You restored the lighthouse beacon!")
+                break
+            else:
+                print("You need a lantern to light the beacon.")
 
 
     elif choices == "3":
